@@ -1,0 +1,17 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "Chivalry2 Weapon Stats",
+    "name_for_model": "chiv2WeaponStats",
+    "description_for_human": "Query chivalry 2 weapon data",
+    "description_for_model": "Use this API to gather data for answering questions about chivalry 2 weapon stats",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "openapi",
+        "url": "http://localhost:3000/openapi.yaml"
+    },
+    "logo_url": "http://localhost:3000/logo.png",
+    "contact_email": "support@example.com",
+    "legal_info_url": "http://www.example.com/legal"
+}

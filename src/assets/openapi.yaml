@@ -1,0 +1,274 @@
+openapi: 3.0.1
+info:
+  title: TODO Plugin
+  description: A plugin that allows the user to create and manage a TODO list using ChatGPT.
+  version: 'v1'
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/weapons:
+    get:
+      operationId: getWeapons
+      summary: Get a list of weapons that satisfy the query constraints
+      parameters:
+        - in: query
+          name: classes
+          schema:
+            type: string
+          description: Comma separated list. Apply filter based on class
+        - in: query
+          name: subclasses
+          schema:
+            type: string
+          description: Comma separated list. Apply filter based on subclass
+        - in: query
+          name: names
+          schema:
+            type: string
+          description: Comma separated list. Apply filter based on weapon name
+        - in: query
+          name: damageTypes
+          schema:
+            $ref: '#/components/schemas/DamageType'
+          description: Comma separated list. Apply filter based on damage type
+        - in: query
+          name: weaponTypes
+          schema:
+            $ref: '#/components/schemas/WeaponType'
+          description: Comma separated list. Apply filter based on weapon type
+        - in: query 
+          name: attackTypes
+          schema:
+            $ref: '#/components/schemas/AttackType'
+          description: Comma separated list. Apply filter based on attack type
+        - in: query
+          name: sortColumn
+          schema:
+            $ref: '#/components/schemas/SortColumn'
+          description: Column to sort by
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            default: asc
+            enum:
+              - asc
+              - desc
+          description: Sort direction
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: How many records to skip
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: How many records to return
+        - in: query
+          name: partialWeapons
+          schema:
+            type: string
+            enum:
+              - true
+              - false
+          description: If true, only the attacks matched in the query will be returned. Otherwise all weapon attacks will be returned. Useful if you do not want all attack data.
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Weapon'
+components:
+  schemas:
+    WeaponType:
+      type: string
+      enum:
+        - Axe
+        - Hammer
+        - Club
+        - Tool
+        - Polearm
+        - Spear
+        - Sword
+        - Dagger
+        - Bow
+        - Two Handed
+        - One Handed
+    DamageType:
+      type: string
+      enum:
+        - Blunt
+        - Cut
+        - Chop
+    Class:
+      type: string
+      enum:
+        - Archer
+        - Vanguard
+        - Footman
+        - Knight
+    Subclass:
+      type: string
+      enum:
+        - Longbowman,
+        - Crossbowman,
+        - Skirmisher,
+        - Devastator,
+        - Raider,
+        - Ambusher,
+        - Poleman,
+        - Man at Arms,
+        - Engineer,
+        - Officer,
+        - Guardian,
+        - Crusader
+    SortColumn: 
+      type: string
+      enum:
+        - name
+        - damageType
+        - attackType
+        - windup
+        - baseDamage
+        - averageDamage
+        - footmanDamage
+        - knightDamage
+        - holding
+        - release
+        - recovery
+        - combo
+        - range
+        - altRange 
+    AttackType:
+      type: string
+      enum:
+        - LIGHT_AVERAGE
+        - HEAVY_AVERAGE
+        - LIGHT_SLASH
+        - HEAVY_SLASH
+        - LIGHT_STAB
+        - HEAVY_STAB
+        - LIGHT_OVERHEAD
+        - HEAVY_OVERHEAD
+        - SPECIAL
+        - SPRINT_CHARGE
+        - LEAPING_STRIKE
+    RegularAttack:
+      type: object
+      properties:
+        range:
+          type: integer
+        altRange:
+          type: integer
+        light:
+          "$ref": "#/components/schemas/AttackVariant"
+        heavy:
+          "$ref": "#/components/schemas/AttackVariant"
+    AttackVariant:
+      type: object
+      properties:
+        windup:
+          type: number
+        damage:
+          type: integer
+        holding:
+          type: number
+        release:
+          type: number
+        recovery:
+          type: number
+        combo:
+          type: number
+        riposte:
+          type: number
+        turnLimitStrength:
+          type: number
+        verticalTurnLimitStrength:
+          type: number
+        reverseTurnLimitStrength:
+          type: number
+        feint:
+          type: number
+        thwack:
+          type: number
+        hitSuccess:
+          type: number
+        blocked:
+          type: number
+        worldHit:
+          type: number
+        staminaCost:
+          type: number
+        playRate:
+          type: number
+        drawStrength:
+          type: number
+        worldHitStartPercentage:
+          type: number
+        worldHitStopPercentage:
+          type: number
+        thwackOnHit:
+          type: integer
+        hitSuccessOnHit:
+          type: integer
+        direction:
+          type: string
+        altDirection:
+          type: string
+        cooldown:
+          type: number
+        weaponTipCheckReverse:
+          type: integer
+        weaponTipCheckReverseAlt:
+          type: integer
+        weaponTipCheckDisable:
+          type: integer
+        comboFromBlocked:
+          type: number
+    Attacks:
+      type: object
+      properties:
+        average:
+          "$ref": "#/components/schemas/RegularAttack"
+        slash:
+          "$ref": "#/components/schemas/RegularAttack"
+        stab:
+          "$ref": "#/components/schemas/RegularAttack"
+        overhead:
+          "$ref": "#/components/schemas/RegularAttack"
+        special:
+          "$ref": "#/components/schemas/AttackVariant"
+        sprintCharge:
+          "$ref": "#/components/schemas/AttackVariant"
+        leapingStrike: 
+          "$ref": "#/components/schemas/AttackVariant"
+    Weapon:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        weaponTypes:
+          type: array
+          items: 
+            "$ref": "#/components/schemas/WeaponType"
+        damageType:
+          type: array
+          items: 
+            "$ref": "#/components/schemas/DamageType"
+        classes:
+          type: array
+          items: 
+            "$ref": "#/components/schemas/Class"
+        subclasses:
+          type: array
+          items: 
+            "$ref": "#/components/schemas/Subclass"
+        attacks:
+          "$ref": "#/components/schemas/Attacks"
