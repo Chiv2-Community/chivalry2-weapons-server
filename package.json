@@ -6,9 +6,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build": "rm -rf dist && tsc && npm run copy-files",
+    "clean": "rm -rf dist",
+    "compile": "tsc",
     "copy-files": "cp -r src/assets dist/assets",
-    "dev": "nodemon dist/index.js"
+    "build": "npm run clean && npm run compile && npm run copy-files",
+    "start": "npm run build && nodemon dist/index.js"
+
   },
   "prepackage": "npm run build",
   "main": "./dist/index.js",
